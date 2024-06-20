@@ -1,7 +1,9 @@
 use std::fs::read_dir;
-use std::path::{Path, PathBuf};
+use std::path::{ Path, PathBuf };
+use std::io::Error;
 
-pub fn search_directory(path_origin: &Path, key_dir: &str) -> Result<Option<PathBuf>, std::io::Error> {
+// Craw through an directory to find another directory
+pub fn search_directory(path_origin: &Path, key_dir: &str) -> Result<Option<PathBuf>, Error> {
   let mut stack: Vec<PathBuf> = Vec::new();
 
   stack.push(path_origin.to_path_buf());
@@ -23,3 +25,18 @@ pub fn search_directory(path_origin: &Path, key_dir: &str) -> Result<Option<Path
 
   return Ok(None);
 }
+
+// Return the files inside an directory
+pub fn open_directory(path_to: &Path) -> Result<Option<Vec<PathBuf>>, Error> {  
+  let mut dir_content: Vec<PathBuf> = Vec::new();
+  for entry in read_dir(path_to)? {
+    let entry = entry?;
+    dir_content.push(entry.path());
+  }
+
+  if dir_content.len() > 0 {
+    return Ok(Some(dir_content));
+  } else {
+    return Ok(None);
+  }
+} 
