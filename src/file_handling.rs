@@ -1,5 +1,5 @@
 use core::panic;
-use std::fs::{ read_dir, remove_file, read, File };
+use std::fs::{ read, read_dir, remove_file, File };
 use std::path::{ Path, PathBuf };
 use std::io::{ Error, ErrorKind, Write };
 
@@ -45,7 +45,7 @@ pub fn open_directory(path_to: &Path) -> Result<Option<Vec<PathBuf>>, Error> {
 }
 
 
-// return an string with the content of the file
+// return an Vedc<u8> with the content of the file
 pub fn read_file(path: &Path) -> Result<Option<Vec<u8>>, Error> {
   
   if !path.exists() {
@@ -88,6 +88,21 @@ pub fn create_file(dest: &Path, content: &Vec<u8>) -> Result<(), Error> {
     },
   }
 }
+
+// i think it is pointless, but i will leave it here. just in case
+// pub fn remove_file(src: &Path) -> Result<(), Error> {
+//   if !src.exists() {
+//     return Err(Error::from(ErrorKind::NotFound));
+//   }
+// 
+//   match remove_file(&src) {
+//     Ok(_) => Ok(()),
+//     Err(e) = {
+//       eprintln("an error occurred while trying to remove file: {}.\nError: {}", src.display(), e);
+//       return Err(e);
+//     },
+//   }
+// }
 
 
 pub fn move_file(src: &Path, dest: &Path) -> Result<(), Error> {

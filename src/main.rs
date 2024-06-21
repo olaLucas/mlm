@@ -6,35 +6,28 @@ pub mod file_handling;
 
 
 fn main() {
-	let path = Path::new("/home/dio/git_repos/just-coding/");
-	let path = match search_directory(path, "messing-with-apis") {
-		Ok(opt) => {
-			match opt {
-				Some(s) => s,
-				None => panic!("directory not found."),
-			}
-		},
 
-		Err(e) => panic!("An error occurred during execution: {:#?}", e),
+	let file_path: &str = "/home/dio/git_repos/psicohits/test_dir/new_file.rs";
+	let _file = match create_file(&Path::new(file_path), &Vec::from("Ola, eu sou um arquivo.".as_bytes())) {
+		Ok(()) => println!("file {file_path}  created."),
+		Err(e) => panic!("{:#?}", e),
 	};
 
-	let path = match path.to_str() {
-		Some(s) => s,
-		None => panic!("none returned when trying to convert PathBuf to str."),
-	};
-
-
-	let content = match open_directory(&Path::new(path)) {
+	let content = match read_file(&Path::new(file_path)) {
 		Ok(opt) => match opt {
-			Some(content_vec) => content_vec,
-			None => panic!("Empty folder."),
+			Some(c) => match String::from_utf8(c) {
+        Ok(s) => s,
+        Err(e) => { 
+          eprintln!("{:#?}", e);
+          panic!("an error occurred while trying to convert file content content to string");
+        },
+      },
+
+			None => String::new(),
 		},
-			
-		Err(e) => panic!("An error occurred during execution: {:#?}", e), 
+
+		Err(e) => panic!("{:#?}", e),
 	};
 
-	println!("found in {path}");
-	for file in content {
-		println!("{}", file.file_name().unwrap().to_str().unwrap());
-	}
+  println!("{content}");
 }
